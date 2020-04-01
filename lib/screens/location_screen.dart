@@ -1,12 +1,38 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 
 class LocationScreen extends StatefulWidget {
+  final locationWeather;
+
+  const LocationScreen({this.locationWeather});
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
+  double temp;
+  int condition;
+  String cityName;
+
+  @override
+  void initState() {
+    super.initState();
+    // print(widget.locationWeather);
+
+    updateUI(widget.locationWeather);
+  }
+
+  void updateUI(dynamic weatherData) {
+    int condition = jsonDecode(weatherData)['weather'][0]['id'];
+    String cityName = jsonDecode(weatherData)['name'];
+    double temp = jsonDecode(weatherData)['main']['temp'];
+    print(temp);
+    print(condition);
+    print(cityName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,9 +100,3 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 }
-//  int condition = jsonDecode(data)['weather'][0]['id'];
-//     String cityName = jsonDecode(data)['name'];
-//     double temp = jsonDecode(data)['main']['temp'];
-//     print(temp);
-//     print(condition);
-//     print(cityName);
