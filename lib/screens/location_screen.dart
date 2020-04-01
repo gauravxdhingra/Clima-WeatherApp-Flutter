@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
+import '../services/weather.dart';
 
 class LocationScreen extends StatefulWidget {
   final locationWeather;
@@ -12,9 +11,12 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  double temp;
-  int condition;
+  WeatherModel weather = WeatherModel();
+  int tempInt;
+  String weatherIcon;
+  // int condition;
   String cityName;
+  String remark;
 
   @override
   void initState() {
@@ -25,12 +27,18 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void updateUI(dynamic weatherData) {
-    int condition = jsonDecode(weatherData)['weather'][0]['id'];
-    String cityName = jsonDecode(weatherData)['name'];
-    double temp = jsonDecode(weatherData)['main']['temp'];
-    print(temp);
-    print(condition);
-    print(cityName);
+    setState(() {
+      int condition = (weatherData)['weather'][0]['id'];
+      cityName = (weatherData)['name'];
+      double temp = (weatherData)['main']['temp'];
+      tempInt = temp.toInt();
+      weatherIcon = weather.getWeatherIcon(condition);
+      remark = weather.getMessage(temp.toInt());
+    });
+
+    // print(tempInt);
+    // print(condition);
+    // print(cityName);
   }
 
   @override
@@ -75,11 +83,11 @@ class _LocationScreenState extends State<LocationScreen> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      '32°',
+                      '$tempInt°',
                       style: kTempTextStyle,
                     ),
                     Text(
-                      '☀️',
+                      weatherIcon,
                       style: kConditionTextStyle,
                     ),
                   ],
@@ -88,7 +96,7 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  "It's 🍦 time in San Francisco!",
+                  '$remark in $cityName',
                   textAlign: TextAlign.right,
                   style: kMessageTextStyle,
                 ),
