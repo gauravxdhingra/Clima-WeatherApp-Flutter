@@ -1,4 +1,7 @@
-import 'dart:convert';
+// import 'dart:convert';
+import 'package:clima/screens/location_screen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import '../services/networking.dart';
 
 // import 'package:clima/services/networking.dart';
@@ -25,17 +28,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void getLocationData() async {
     Location location = Location();
     await location.getCurrentLocation();
-    // print(location.latitude);
-    // print(location.longitude);
+    print(location.latitude);
+    print(location.longitude);
 
     lat = location.latitude;
     long = location.longitude;
     NetworkHelper networkHelper = NetworkHelper(
         'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$long&appid=$apiKey');
 
-var weatherData=await networkHelper.getData();
+    var weatherData = await networkHelper.getData();
 
-   
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return LocationScreen();
+    }));
   }
 
   @override
@@ -43,14 +48,11 @@ var weatherData=await networkHelper.getData();
     getLocationData();
     return Scaffold(
       body: Center(
-          // child: RaisedButton(
-          //   onPressed: () {
-          //     //Get the current location
-          //     // getLocation();
-          //   },
-          //   child: Text('Get Location'),
-          // ),
-          ),
+        child: SpinKitDoubleBounce(
+          color: Colors.white,
+          size: 100,
+        ),
+      ),
     );
   }
 }
